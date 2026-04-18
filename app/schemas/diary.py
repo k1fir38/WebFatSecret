@@ -1,5 +1,7 @@
 from datetime import date
 from pydantic import BaseModel, ConfigDict, model_validator, Field, computed_field
+
+from app.core.calculators import calculate_macro_by_weight
 from app.core.models.enums import MealType
 from typing import Optional
 
@@ -37,21 +39,18 @@ class DiaryEntryRead(BaseModel):
 
     @computed_field
     def total_proteins(self) -> float:
-        if self.product:
-            return round((self.product.proteins / 100) * self.weight_grams, 1)
-        return 0.0
+        if not self.product: return 0.0
+        return calculate_macro_by_weight(self.product.proteins, self.weight_grams)
 
     @computed_field
     def total_fats(self) -> float:
-        if self.product:
-            return round((self.product.fats / 100) * self.weight_grams, 1)
-        return 0.0
+        if not self.product: return 0.0
+        return calculate_macro_by_weight(self.product.fats, self.weight_grams)
 
     @computed_field
     def total_carbs(self) -> float:
-        if self.product:
-            return round((self.product.carbs / 100) * self.weight_grams, 1)
-        return 0.0
+        if not self.product: return 0.0
+        return calculate_macro_by_weight(self.product.carbs, self.weight_grams)
 
 class DiaryEntryUpdate(BaseModel):
     date: Optional[date] = None
@@ -66,3 +65,12 @@ class DiaryEntryUpdate(BaseModel):
             raise ValueError("Нельзя указать продукт и рецепт одновременно")
         return self
 
+class DiarySummary(BaseModel):
+    date: date
+    total_calories: float
+    total_proteins: float
+    total_fats: float
+    total_carbs: float
+    kcal_goal: float
+    kcal_remaining: float
+    kcal_overage: float

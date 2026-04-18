@@ -54,3 +54,4 @@ async def update_user(session: AsyncSession, user) -> User | None:
     await session.refresh(user)
 
     return user
+

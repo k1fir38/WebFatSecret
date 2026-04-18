@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 
 from app.api.dependencies import get_current_user
-from app.schemas.diary import DiaryEntryCreate, DiaryEntryRead, DiaryEntryUpdate
+from app.schemas.diary import DiaryEntryCreate, DiaryEntryRead, DiaryEntryUpdate, DiarySummary
 from app.db.session import get_async_session
 from app.crud.diary import (
     create_diary_entry,
@@ -15,9 +15,7 @@ from app.crud.diary import (
     delete_diary_entry,
     update_diary,
 )
-
-
-
+from app.services.diary import get_daily_summary
 
 router = APIRouter(tags=["Diary"], prefix="/diary")
 
@@ -104,3 +102,22 @@ async def update_dairy(
     diary_update = await update_diary(session=session, diary=diary)
 
     return diary_update
+
+
+@router.get("/summary/{date}",response_model=DiarySummary)
+async def get_summary(
+        date: date,
+        current_user = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    diary = await get_user_diary_for_date(
+        session=session,
+        user_id=current_user.id,
+        diary_date=date
+    )
+
+    total = get_daily_summary(entries_diary=diary, user=current_user, diary_date=date)
+
+    return total
+
+

@@ -8,6 +8,7 @@ from sqlalchemy.orm import (
 )
 from .base import Base
 from .enums import MealType
+from ..calculators import calculate_macro_by_weight
 
 if TYPE_CHECKING:
     from .user import User
@@ -38,3 +39,27 @@ class DiaryEntry(Base):
             name="check_diary_entry_source"
         ),
     )
+
+    @property
+    def proteins_total(self) -> float:
+        if self.product:
+            return calculate_macro_by_weight(self.product.proteins, self.weight_grams)
+        return 0.0
+
+    @property
+    def fats_total(self) -> float:
+        if self.product:
+            return calculate_macro_by_weight(self.product.fats, self.weight_grams)
+        return 0.0
+
+    @property
+    def carbs_total(self) -> float:
+        if self.product:
+            return calculate_macro_by_weight(self.product.carbs, self.weight_grams)
+        return 0.0
+
+    @property
+    def calories_total(self) -> float:
+        if self.product:
+            return (self.product.calories / 100) * self.weight_grams
+        return 0.0

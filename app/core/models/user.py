@@ -65,3 +65,27 @@ class User(Base):
         back_populates="creator"
     )
 
+    @property
+    def calories_goal(self) -> float:
+        today = date.today()
+        birth = self.birth_date
+        
+        age = today.year - birth.year - ((today.month, today.day) < (birth.month, birth.day))
+
+        # Для мужчин: (10 × вес) + (6.25 × рост) - (5 × возраст) + 5
+        # Для женщин: (10 × вес) + (6.25 × рост) - (5 × возраст) - 161
+        if self.gender == Gender.FEMALE:
+            BMR = (10 * self.weight) + (6.25 * self.height) - (5 * age) - 161
+        else:
+            BMR = (10 * self.weight) + (6.25 * self.height) - (5 * age) + 5
+
+        if  self.activity_level == ActivityLevel.SEDENTARY: BMR *= 1.2
+        elif self.activity_level == ActivityLevel.LIGHT: BMR *= 1.375
+        elif self.activity_level == ActivityLevel.MODERATE: BMR *= 1.55
+        elif self.activity_level == ActivityLevel.INTENSE: BMR *= 1.725
+
+        if self.goal == Goal.LOSE_WEIGHT: BMR *= 0.85
+        elif self.goal == Goal.GAIN_MUSCLE: BMR *= 1.15
+
+        return round(BMR)
+
