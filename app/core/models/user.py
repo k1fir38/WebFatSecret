@@ -89,3 +89,35 @@ class User(Base):
 
         return round(BMR)
 
+    @property
+    def proteins_goal(self) -> float:
+        ratios = {
+            Goal.LOSE_WEIGHT: 0.30,
+            Goal.MAINTAIN: 0.20,
+            Goal.GAIN_MUSCLE: 0.25
+        }
+        ratio = ratios.get(self.goal, 0.20)
+
+        return round((self.calories_goal * ratio) / 4)
+
+    @property
+    def carbs_goal(self) -> float:
+        ratios = {
+            Goal.LOSE_WEIGHT: 0.40,
+            Goal.MAINTAIN: 0.50,
+            Goal.GAIN_MUSCLE: 0.50
+        }
+        ratio = ratios.get(self.goal, 0.50)
+
+        return round((self.calories_goal * ratio) / 4)
+
+    @property
+    def fats_goal(self) -> float:
+        ratios = {
+            Goal.LOSE_WEIGHT: 0.30,
+            Goal.MAINTAIN: 0.30,
+            Goal.GAIN_MUSCLE: 0.25
+        }
+        ratio = ratios.get(self.goal, 0.30)
+
+        return round((self.calories_goal * ratio) / 9)

@@ -74,3 +74,9 @@ class DiarySummary(BaseModel):
     kcal_goal: float
     kcal_remaining: float
     kcal_overage: float
+    goal_proteins: float
+    goal_fats: float
+    goal_carbs: float
+    remaining_proteins: float
+    remaining_fats: float
+    remaining_carbs: float

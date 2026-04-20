@@ -20,6 +20,10 @@ class UserCreate(UserBase):
 
 class UserRead(UserBase):
     id: int
+    calories_goal: float
+    proteins_goal: float
+    fats_goal: float
+    carbs_goal: float
 
 class UserLogin(BaseModel):
     email: EmailStr

@@ -25,7 +25,17 @@ def get_daily_summary(entries_diary: list[DiaryEntry], user: User, diary_date: d
         "total_proteins": round(total_proteins, 1),
         "total_fats": round(total_fats, 1),
         "total_carbs": round(total_carbs, 1),
+
         "kcal_goal": user.calories_goal,
-        "kcal_remaining": kcal_remaining,
-        "kcal_overage": kcal_overage
+        "kcal_remaining": round(kcal_remaining, 1),
+        "kcal_overage": round(kcal_overage, 1),
+
+        "goal_proteins": user.proteins_goal,
+        "goal_fats": user.fats_goal,
+        "goal_carbs": user.carbs_goal,
+
+        # Считаем остатки БЖУ
+        "remaining_proteins": round(max(0, user.proteins_goal - total_proteins), 1),
+        "remaining_fats": round(max(0, user.fats_goal - total_fats), 1),
+        "remaining_carbs": round(max(0, user.carbs_goal - total_carbs), 1),
     }
