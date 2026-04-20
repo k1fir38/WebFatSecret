@@ -69,3 +69,27 @@ class RecipeRead(BaseModel):
         if total_weight == 0:
             return 0.0
         return round((self.total_calories / total_weight) * 100, 1)
+
+    @computed_field
+    def proteins_per_100g(self) -> float:
+
+        total_weight = sum(ing.weight_grams for ing in self.ingredients)
+        if total_weight == 0:
+            return 0.0
+        return round((self.total_proteins / total_weight) * 100, 1)
+
+    @computed_field
+    def fats_per_100g(self) -> float:
+
+        total_weight = sum(ing.weight_grams for ing in self.ingredients)
+        if total_weight == 0:
+            return 0.0
+        return round((self.total_fats / total_weight) * 100, 1)
+
+    @computed_field
+    def carbs_per_100g(self) -> float:
+
+        total_weight = sum(ing.weight_grams for ing in self.ingredients)
+        if total_weight == 0:
+            return 0.0
+        return round((self.total_carbs / total_weight) * 100, 1)
