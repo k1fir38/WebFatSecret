@@ -61,7 +61,7 @@ async def delete_recipes(
 
     await delete_recipe(session=session,recipe_obj=recipe)
 
-@router.post("/{recipe_id}", response_model=RecipeRead)
+@router.get("/{recipe_id}", response_model=RecipeRead)
 async def create_new_recipe(
         recipe_id: int,
         current_user=Depends(get_current_user),
